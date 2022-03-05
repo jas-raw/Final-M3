@@ -1,0 +1,171 @@
+<div *ngIf="info" class="container">
+    <div class="row text-center my-3">
+        <h3>VS</h3>
+        <div class="col-4 text-center">
+            <span><strong>Local: </strong>{{info.locale}}</span>
+        </div>
+        <div class="col-4 text-center">
+            <span><strong>Fecha: </strong>{{info.date | date}}</span>
+        </div>
+        <div class="col-4 text-center">
+            <span><strong>Visitante: </strong>{{info.visitor}}</span>
+        </div>
+    </div>
+    <div class="row text-center my-3">
+        <h5>Marcador</h5>
+        <div class="col-4 text-center">
+            <span><strong>Local: </strong>{{info.goal_locale}}</span>
+        </div>
+        <div class="col-4">
+            <span><strong>Tiempo extra: </strong>{{info.extra ? "Si" : "No"}}</span>
+        </div>
+        <div class="col-4 text-center">
+            <span><strong>Visitante: </strong>{{info.goal_visitor}}</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-3">
+            <span><strong>Arbitro: </strong>{{info.referee}}</span>
+        </div>
+        <div class="col-3">
+            <span><strong>Linea 1: </strong>{{info.left_side_referee}}</span>
+        </div>
+        <div class="col-3">
+            <span><strong>Linea 2: </strong>{{info.right_side_referee}}</span>
+        </div>
+        <div class="col-3">
+            <span><strong>Arbitro 4: </strong>{{info.extra_referee}}</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-4">
+            <span>Total de fans: {{info.fans}}</span>
+        </div>
+        <div class="col-4">
+            <span>Mejor jugador: {{info.best_player}}</span>
+        </div>
+        <div class="col-4">
+            <span>Narrador: {{info.speaker}}</span>
+        </div>
+    </div>
+    <div *ngIf="info.penalties" class="row my-3 text-center">
+        <h5>Penalties</h5>
+        <div class="col-4 text-center">
+            <span><strong>Local: </strong>{{info.penal_locale}}</span>
+        </div>
+        <div class="col-4">
+            <span><strong>Penalties: </strong>{{info.penalties ? "Si" : "No"}}</span>
+        </div>
+        <div class="col-4 text-center">
+            <span><strong>Visitante: </strong>{{info.penal_visitors}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="p-2 text-center">
+                <h2>Añadir eventos</h2>
+                <div class="row bg-dark text-light">
+                    <div class="col-2 mb-2">
+                        <label for="">Tipo</label>
+                        <ng-multiselect-dropdown
+                        [placeholder]="'Tipo'"
+                        [settings]="dropdownSettings"
+                        [data]="types"
+                        [(ngModel)]="type"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                    <div class="col-4 mb-2">
+                        <label for="">Observacion</label>
+                        <input [(ngModel)]="observation" type="text" class="form-control">
+                    </div>
+                    <div class="col-auto m-auto">
+                        <label for="">VAR</label>
+                        <input [(ngModel)]="v_a_r" type="checkbox" class="form-check">
+                    </div>
+                    <div class="col-5 mb-2">
+                        <label for="">Resultado de var</label>
+                        <input [(ngModel)]="resv_a_r" [disabled]="!v_a_r" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="p-2">
+                <div class="row bg-primary text-light">
+                    <div class="col-4 mb-2">
+                        <label for="">Equipo</label>
+                        <ng-multiselect-dropdown
+                        [placeholder]="'Equipo'"
+                        [settings]="dropdownSettings"
+                        [data]="teamsDisp"
+                        [(ngModel)]="selectedTeam"
+                        (onSelect)="changePlayer($event)"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                    <div class="col-4 mb-2">
+                        <label for="">Jugador</label>
+                        <ng-multiselect-dropdown
+                        [placeholder]="'Jugador'"
+                        [settings]="dropdownSettings"
+                        [data]="playersDisp"
+                        [(ngModel)]="selectedPlayer"
+                        [disabled]="!selectedTeam"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                    <div class="col-4 mb-2">
+                        <label for="">Tarjeta</label>
+                        <ng-multiselect-dropdown
+                        [placeholder]="'Tarjeta'"
+                        [settings]="dropdownSettings"
+                        [data]="cards"
+                        [(ngModel)]="card"
+                        [disabled]="!selectedPlayer"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row justify-content-center p-2">
+                    <div class="col-auto">
+                        <button (click)="save($event)" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="info.plays.length > 0" class="row my-4">
+        <h5>Jugadas destacadas</h5>
+        <div class="col">
+            <div *ngFor="let item of info.plays" class="border p-2">
+                <div>
+                    <div class="row bg-dark text-light">
+                        <div class="col-2 h4">Tipo</div>
+                        <div class="col-4 h4">Observacion</div>
+                        <div class="col-2 h4">VAR</div>
+                        <div class="col-4 h4">Resultado de var</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">{{item.type}}</div>
+                        <div class="col-4">{{item.observation}}</div>
+                        <div class="col-2">{{item.v_a_r ? "SI" : "NO"}}</div>
+                        <div class="col-4">{{item.v_a_r_result}}</div>
+                    </div>
+                </div>
+                <div *ngIf="item.team || item.player || item.card">
+                    <div class="row bg-primary text-light">
+                        <div class="col-4 h4">Equipo</div>
+                        <div class="col-4 h4">Jugador</div>
+                        <div class="col-4 h4">Tarjeta</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">{{item.team}}</div>
+                        <div class="col-4">{{item.player}}</div>
+                        <div class="col-4">{{item.card}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
